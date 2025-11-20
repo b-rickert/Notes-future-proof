@@ -1,6 +1,7 @@
 package com.brickert.notes;
 
 import com.brickert.notes.config.Config;
+import com.brickert.notes.note.Note;
 import java.nio.file.Path;
 import java.io.IOException;
 
@@ -9,8 +10,12 @@ public class Main {
         try {
             Path notesDir = Config.ensureNotesDirectoryExists();
             System.out.println("Notes directory created/verified at: " + notesDir);
+
+            Note myNote = new Note("Java Note #1", "This is my first test note for my Java project, add information in this section.");
+            System.out.println("Note created successfully");
+
         } catch (IOException e) {
-            System.err.println("Error creating notes directory: " + e.getMessage());
+            System.out.println("Error creating notes directory: " + e.getMessage());
         }
     }
 }
