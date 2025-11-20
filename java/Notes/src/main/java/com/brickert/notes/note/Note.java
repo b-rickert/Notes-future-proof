@@ -27,4 +27,36 @@ public class Note {
 
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public LocalDateTime getModified() {
+        return modified;
+    }
+
+    public List getTags() {
+        return tags;
+    }
+
+    public String getAuthor() {
+        author;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
 }
