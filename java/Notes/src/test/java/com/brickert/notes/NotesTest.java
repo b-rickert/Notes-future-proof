@@ -1,8 +1,10 @@
 package com.brickert.notes;
 
 import org.junit.jupiter.api.Test;
+import com.brickert.notes.note.Note;
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.Instant;
+import java.util.List;
 
 public class NotesTest 
 {   
@@ -52,8 +54,24 @@ public class NotesTest
         Instant modified = created.plusSeconds(60);
         List<String> tage = List.of("java", "testing");
         Note note = new note(id, title, content, created, modified, tags);
-
-        
     }
+
+       @Test
+    public void testNotesDirectoryIsSet() {
+        // Verify the directory path is not null or empty
+        assertNotNull(Config.NOTES_DIRECTORY);
+        assertFalse(Config.NOTES_DIRECTORY.isEmpty());
+
+        // Verify it contains "noteVault"
+        assertTrue(Config.NOTES_DIRECTORY.contains("noteVault"));
+
+        System.out.println("Notes will be saved to: " + Config.NOTES_DIRECTORY);
+    }
+
+    @Test
+    public void testNoteExtensionIsSet() {
+        assertEquals(".note", Config.NOTE_EXTENSION);
+    }
+    
 }
 

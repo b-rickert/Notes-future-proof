@@ -9,14 +9,17 @@ public class Note {
     private String content;
     private LocalDateTime created;
     private LocalDateTime modified;
-    private List<String> tags;
+    private List<String> tags; //optional
+    private String author;  //optional
+    private String status;  //optional
+    private Integer priority;  //optional
 
     public Note (String title, String content) {
         this.title = title;
         this.content = content;
         this.created = LocalDateTime.now();
         this.modified = LocalDateTime.now();
-        this.tags = new ArrayList<>();  //optional
+        this.tags = new ArrayList<>();  
     }
 
     public Note () {
@@ -24,7 +27,7 @@ public class Note {
         this.content = "";
         this.created = LocalDateTime.now();
         this.modified = LocalDateTime.now();
-        this.tags = new ArrayList<>();  //optional
+        this.tags = new ArrayList<>();  
     }
 
     public String getTitle() {
@@ -59,18 +62,35 @@ public class Note {
         return tags;
     }
 
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
 
+    public void addTag(String tag) {
+        this.tags.add(tag);
+    }
 
     public String getAuthor() {
         return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getStatus() {
         return status;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public Integer getPriority() {
         return priority;
     }
 
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
 }
