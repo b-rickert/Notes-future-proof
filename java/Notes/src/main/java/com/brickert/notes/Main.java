@@ -11,7 +11,6 @@ public class Main {
             Path notesDir = Config.ensureNotesDirectoryExists();
             System.out.println("Notes directory created/verified at: " + notesDir);
             System.out.println();
-            System.out.println();
             System.out.println("----------------");
 
             Note myNote = new Note("Java Note #1", "This is my first test note for my Java project, add information in this section. \n\n\nTesting bullet points:\n\n -Bullet 1\n -Bullet 2\n -Bullet 3");
@@ -26,17 +25,11 @@ public class Main {
             System.out.println("Tags: " + myNote.getTags());
             System.out.println("----------------");
             System.out.println();
-            System.out.println();
             System.out.println("Content: " + myNote.getContent());
-            System.out.println();
             System.out.println();
             System.out.println("Note created successfully");
 
-            
-
-
-
-        } catch (IOException e) {
+            } catch (IOException e) {
             System.out.println("Error creating notes directory: " + e.getMessage());
         }
     }

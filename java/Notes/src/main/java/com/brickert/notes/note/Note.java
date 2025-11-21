@@ -14,6 +14,7 @@ public class Note {
     private String status;  //optional
     private Integer priority;  //optional
 
+    // constructor to create a note with title and content
     public Note (String title, String content) {
         this.title = title;
         this.content = content;
@@ -21,7 +22,10 @@ public class Note {
         this.modified = LocalDateTime.now();
         this.tags = new ArrayList<>();  
     }
-
+    // default constructor to allow user to create a note without providing title and content
+    // this will set the title to "untitled" and content to an empty string
+    // the created and modified timestamps will be set to the current time
+    // the tags list will be initialized as an empty list
     public Note () {
         this.title = "untitled";
         this.content = "";
@@ -29,7 +33,9 @@ public class Note {
         this.modified = LocalDateTime.now();
         this.tags = new ArrayList<>();  
     }
-
+    
+    // getters and setters for all fields
+    // these allow access and modification the fields of the note
     public String getTitle() {
         return title;
     }
