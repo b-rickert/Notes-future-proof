@@ -2,7 +2,6 @@ package com.brickert.notes.note;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class Note {
@@ -11,28 +10,37 @@ public class Note {
     private LocalDateTime created;
     private LocalDateTime modified;
     private List<String> tags;
-    private String author;
-    private String status;
-    private Integer priority;
 
     public Note (String title, String content) {
         this.title = title;
         this.content = content;
         this.created = LocalDateTime.now();
         this.modified = LocalDateTime.now();
-        this.tags = new ArrayList<>();
-        this.author = author;
-        this.status = status;
-        this.priority = priority;
+        this.tags = new ArrayList<>();  //optional
+    }
 
+    public Note () {
+        this.title = "untitled";
+        this.content = "";
+        this.created = LocalDateTime.now();
+        this.modified = LocalDateTime.now();
+        this.tags = new ArrayList<>();  //optional
     }
 
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getContent() {
         return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public LocalDateTime getCreated() {
@@ -43,12 +51,18 @@ public class Note {
         return modified;
     }
 
-    public List getTags() {
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
+    }
+
+    public List<String> getTags() {
         return tags;
     }
 
+
+
     public String getAuthor() {
-        author;
+        return author;
     }
 
     public String getStatus() {
