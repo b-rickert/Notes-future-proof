@@ -23,6 +23,7 @@ public class Main {
         try {
             Path notesDir = Config.ensureNotesDirectoryExists();
             System.out.println("Notes directory created/verified at: " + notesDir);
+            java.awt.Toolkit.getDefaultToolkit().beep();
             System.out.println();
             while (true) {
                 System.out.println("\n╔══════════════════════════════════════╗");
@@ -50,9 +51,16 @@ public class Main {
                         String content = scanner.nextLine();
                         Note newNote = new Note(title, content);
                         String filename = NoteFileManager.saveNote(newNote);
-                        System.out.println("╔══════════════════════════════════════╗");
-                        System.out.println("║  ✓ Note created: " + newNote.getTitle());
-                        System.out.println("╚══════════════════════════════════════╝");
+                        java.awt.Toolkit.getDefaultToolkit().beep();
+                        
+                        // Make box adaptive to title length
+                        String successMsg = "  ✓ Note created: " + newNote.getTitle();
+                        int successBoxWidth = Math.max(38, successMsg.length() + 2);
+                        String successBorder = "═".repeat(successBoxWidth);
+                        
+                        System.out.println("╔" + successBorder + "╗");
+                        System.out.println("║" + padRight(successMsg, successBoxWidth) + "║");
+                        System.out.println("╚" + successBorder + "╝");
                         break;
                     case 2:
                         List<String> notes = NoteFileManager.listAllNotes();
@@ -94,13 +102,31 @@ public class Main {
                             if (noteChoice > 0 && noteChoice <= notes.size()) {
                                 String selectedFile = notes.get(noteChoice - 1);
                                 String noteContent = NoteFileManager.loadNoteContent(selectedFile);
-                                System.out.println("\n╔" + topBottom + "╗");
-                                System.out.println("║" + padRight("      NOTE CONTENT", boxWidth) + "║");
-                                System.out.println("╠" + divider + "╣");
-                                System.out.println(noteContent);
-                                System.out.println("╚" + topBottom + "╝");
-                            } else if (noteChoice != notes.size() + 1) {
-                                System.out.println("Invalid choice.");
+                                
+                                // Split content into lines
+                                String[] lines = noteContent.split("\n");
+                                
+                                // Find the longest line for box width
+                                int contentMaxLength = 15;
+                                for (String line : lines) {
+                                    if (line.length() > contentMaxLength) {
+                                        contentMaxLength = line.length();
+                                    }
+                                }
+                                int contentBoxWidth = contentMaxLength + 2;
+                                
+                                String contentTopBottom = "═".repeat(contentBoxWidth);
+                                
+                                System.out.println("\n╔" + contentTopBottom + "╗");
+                                System.out.println("║" + padRight(" BRICKtionary Entry", contentBoxWidth) + "║");
+                                System.out.println("╠" + contentTopBottom + "╣");
+                                
+                                // Print each line inside the box
+                                for (String line : lines) {
+                                    System.out.println("║" + padRight(" " + line, contentBoxWidth) + "║");
+                                }
+                                
+                                System.out.println("╚" + contentTopBottom + "╝");
                             }
                         }
                         break;
@@ -111,6 +137,7 @@ public class Main {
                         //what happens
                         break;
                     case 5:
+                        java.awt.Toolkit.getDefaultToolkit().beep();  // ← Goodbye beep
                         System.out.println("Goodbye!");
                         System.exit(0);
                         break;
