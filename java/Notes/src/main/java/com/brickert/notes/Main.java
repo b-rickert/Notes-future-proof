@@ -49,7 +49,15 @@ public class Main {
                         String title = scanner.nextLine();
                         System.out.print("Enter note content: ");
                         String content = scanner.nextLine();
+                        System.out.print("Enter tags (comma seperated, or press Enter to skip): ");
+                        String tagsInput = scanner.nextLine();
                         Note newNote = new Note(title, content);
+                        if (!tagsInput.trim().isEmpty()) {
+                            String[] tagArray = tagsInput.split(",");
+                            for (String tag : tagArray) {
+                                newNote.addTag(tag.trim()); 
+                            }
+                        }
                         String filename = NoteFileManager.saveNote(newNote);
                         java.awt.Toolkit.getDefaultToolkit().beep();
                         
@@ -131,7 +139,66 @@ public class Main {
                         }
                         break;
                     case 3:
-                        //what happens
+                        System.out.println("\n╔══════════════════════════════════════╗");
+                        System.out.println("║           SEARCH NOTES               ║");
+                        System.out.println("╚══════════════════════════════════════╝");
+                        System.out.print("Enter search term: ");
+                        String searchTerm = scanner.nextLine();
+
+                        List<String> results = NoteFileManager.searchNotes(searchTerm);
+                        if (results.isEmpty()) {
+                            System.out.println("\n╔══════════════════════════════════════╗");
+                            System.out.println("║  No notes found matching search      ║");
+                            System.out.println("╚══════════════════════════════════════╝");
+                        } else {
+                            int searchMaxLength = 20;
+                            for (String note : results) {
+                                if (note.length() > searchMaxLength) {
+                                    searchMaxLength = note.length();
+                                }
+                            }
+                            int searchBoxWidth = searchMaxLength + 6;
+                            String searchBorder = "═".repeat(searchBoxWidth);
+                            System.out.println("\n╔" + searchBorder + "╗");
+                            System.out.println("║" + padRight("  Found " + results.size() + " note(s):", searchBoxWidth) + "║");
+                            System.out.println("╠" + searchBorder + "╣");
+
+                            for (int i = 0; i < results.size(); i++) {
+                                String line = " " + (i + 1) + ". " + results.get(i);
+                                System.out.println("║" + padRight(line, searchBoxWidth) + "║");
+                            }
+
+                            String returnOption = " " + (results.size() + 1) + ". Return to main menu";
+                            System.out.println("║" + padRight(returnOption, searchBoxWidth) + "║");
+                            System.out.println("╚" + searchBorder + "╝");
+                            
+                            System.out.print("Enter choice to view note: ");
+                            int searchChoice = scanner.nextInt();
+                            scanner.nextLine();
+
+                            if (searchChoice > 0 && searchChoice <= results.size()) {
+                                String selectedFile = results.get(searchChoice - 1);
+                                String noteContent = NoteFileManager.loadNoteContent(selectedFile);
+
+                                String[] lines = noteContent.split("\n");
+                                int contentMaxLength = 15;
+                                for (String line : lines) {
+                                    if (line.length() > contentMaxLength) {
+                                        contentMaxLength = line.length();
+                                    }
+                                }
+                            int contentBoxWidth = contentMaxLength + 2;
+                            String contentBorder = "═".repeat(contentBoxWidth);
+                            System.out.println("\n╔" + contentBorder + "╗");
+                            System.out.println("║" + padRight(" BRICKtionary Entry", contentBoxWidth) + "║");
+                            System.out.println("╠" + contentBorder + "╣");
+
+                            for (String line : lines) {
+                                System.out.println("║" + padRight(" " + line, contentBoxWidth) + "║");
+                            }
+                            System.out.println("╚" + contentBorder + "╝");
+                            }
+                        }
                         break;
                     case 4: 
                         List<String> notesToDelete = NoteFileManager.listAllNotes();

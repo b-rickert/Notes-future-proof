@@ -74,6 +74,20 @@ public class NoteFileManager {
         Path filePath = notesDir.resolve(filename);
         Files.delete(filePath);
     }
+
+    public static List<String> searchNotes(String keyword) throws IOException {
+        List<String> allNotes = listAllNotes();
+        List<String> matchingNotes = new ArrayList<>();
+
+        for (String filename : allNotes) {
+            String content = loadNoteContent(filename);
+            if (filename.toLowerCase().contains(keyword.toLowerCase()) || 
+                content.toLowerCase().contains(keyword.toLowerCase())) {
+                    matchingNotes.add(filename);
+                }
+        }
+        return matchingNotes;
+    }
 } 
 
 
