@@ -68,6 +68,12 @@ public class NoteFileManager {
         String content = Files.readString(filePath);
         return content;
     }
+
+    public static void deleteNote(String filename) throws IOException {
+        Path notesDir = Config.getNotesHome();
+        Path filePath = notesDir.resolve(filename);
+        Files.delete(filePath);
+    }
 } 
 
 

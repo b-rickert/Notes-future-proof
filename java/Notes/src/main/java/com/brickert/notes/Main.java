@@ -28,7 +28,7 @@ public class Main {
             while (true) {
                 System.out.println("\n╔══════════════════════════════════════╗");
                 System.out.println("║           BRICKtionary               ║");
-                System.out.println("║    Your Personal Dictionary of Notes ║");
+                System.out.println("║ Brick's Personal Dictionary of Notes ║");
                 System.out.println("╠══════════════════════════════════════╣");
                 System.out.println("║ 1. Create a new note                 ║");
                 System.out.println("║ 2. View all notes                    ║");
@@ -134,7 +134,54 @@ public class Main {
                         //what happens
                         break;
                     case 4: 
-                        //what happens
+                        List<String> notesToDelete = NoteFileManager.listAllNotes();
+                        if (notesToDelete.isEmpty()) {
+                            System.out.println("\n╔══════════════════════════════════════╗");
+                            System.out.println("║          No notes found              ║");
+                            System.out.println("╚══════════════════════════════════════╝");
+                        } else {
+                            int deleteMaxLength = 15;
+                            for (String note : notesToDelete) {
+                                if (note.length() > deleteMaxLength) {
+                                    deleteMaxLength = note.length();
+                                }
+                            }
+                            int deleteBoxWidth = deleteMaxLength + 6;
+                            String deleteBorder = "═".repeat(deleteBoxWidth);
+                            
+                            System.out.println("\n╔" + deleteBorder + "╗");
+                            System.out.println("║" + padRight("        DELETE NOTE", deleteBoxWidth) + "║");
+                            System.out.println("╠" + deleteBorder + "╣");
+
+                            for (int i = 0; i < notesToDelete.size(); i++) {
+                                String line = " " + (i + 1) + ". " + notesToDelete.get(i);
+                                System.out.println("║" + padRight(line, deleteBoxWidth) + "║");
+                            }
+
+                            String cancelOption = " " + (notesToDelete.size() + 1) + ". Cancel";
+                            System.out.println("║" + padRight(cancelOption, deleteBoxWidth) + "║");
+                            System.out.println("╚" + deleteBorder + "╝");   
+                            
+                            System.out.print("Enter note to delete: ");
+                            int deleteChoice = scanner.nextInt();
+                            scanner.nextLine();
+
+                            if (deleteChoice > 0 && deleteChoice <= notesToDelete.size()) {
+                                String fileToDelete = notesToDelete.get(deleteChoice - 1);
+                                System.out.print("Are you sure you want to delete '" + fileToDelete + "'? (Y/N): ");
+                                String confirm = scanner.nextLine();
+
+                                if (confirm.equalsIgnoreCase("Y") || confirm.equalsIgnoreCase("yes")) {
+                                    NoteFileManager.deleteNote(fileToDelete);
+                                    java.awt.Toolkit.getDefaultToolkit().beep();
+                                    System.out.println("✓ Note deleted successfully!");
+                                } else {
+                                    System.out.println("Delete cancelled.");
+                                }
+                            } else if (deleteChoice != notesToDelete.size() + 1) {
+                                System.out.println("Invalid choice.");
+                            }
+                        }
                         break;
                     case 5:
                         java.awt.Toolkit.getDefaultToolkit().beep();  // ← Goodbye beep
