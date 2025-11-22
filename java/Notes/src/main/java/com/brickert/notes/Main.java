@@ -2,9 +2,11 @@ package com.brickert.notes;
 
 import com.brickert.notes.config.Config;
 import com.brickert.notes.note.Note;
+import com.brickert.notes.utilities.NoteFileManager;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.util.Scanner;
+import com.brickert.notes.utilities.NoteFileManager;;
 
 public class Main {
 
@@ -37,7 +39,9 @@ public class Main {
 
                         Note newNote = new Note(title, content);
 
+                        String filename = NoteFileManager.saveNote(newNote);
                         System.out.println("Note created: " + newNote.getTitle());
+
                         break;
                     case 2:
                         //what happens
