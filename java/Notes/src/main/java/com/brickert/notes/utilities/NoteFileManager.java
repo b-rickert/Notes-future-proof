@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Stream;
 
 public class NoteFileManager {
     public static String generateFilename(String title) {
@@ -44,6 +47,26 @@ public class NoteFileManager {
         String content = formatNoteAsYaml(note);
         Files.writeString(filePath, content);
         return filename;
+    }
+
+    public static List<String> listAllNotes() throws IOException {
+        Path notesDir = Config.getNotesHome();
+        List <String> filenames = new ArrayList<>();
+
+        Files.list(notesDir).forEach(path -> {
+            String filename = path.getFileName().toString();
+            if (filename.endsWith(".md")) {
+                filenames.add(filename);
+            }
+        });
+        return filenames;
+    }
+
+    public static String loadNoteContent(String filename) throws IOException {
+        Path notesDir = Config.getNotesHome();
+        Path filePath = notesDir.resolve(filename);
+        String content = Files.readString(filePath);
+        return content;
     }
 } 
 
