@@ -4,30 +4,60 @@ import com.brickert.notes.config.Config;
 import com.brickert.notes.note.Note;
 import java.nio.file.Path;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Main {
-     public static void main(String[] args) {
+
+    public static void main(String[] args) {
+            Scanner scanner = new Scanner(System.in);
+
         try {
             Path notesDir = Config.ensureNotesDirectoryExists();
             System.out.println("Notes directory created/verified at: " + notesDir);
-            System.out.println();
-            System.out.println("----------------");
+            while (true) {
+                System.out.println("\n============= NOTES APP ===============");
+                System.out.println("PLEASE PICK THE CORRESPONDING OPTION NUMBER");
+                System.out.println("1. Create a new note");
+                System.out.println("2. View all notes");
+                System.out.println("3. Search notes");
+                System.out.println("4. Delete a note");
+                System.out.println("5. Exit");
+                System.out.println("========================================");
+                System.out.print("Enter your choice: ");
+                int choice = scanner.nextInt();
+                scanner.nextLine();
 
-            Note myNote = new Note("Java Note #1", "This is my first test note for my Java project, add information in this section. \n\n\nTesting bullet points:\n\n -Bullet 1\n -Bullet 2\n -Bullet 3");
-            myNote.getTags().add("Testing");
-            myNote.getTags().add("For");
-            myNote.getTags().add("Java");
-            myNote.getTags().add("Presentation");
-            
-            
-            System.out.println("Title: " + myNote.getTitle());
-            System.out.println("Created: " + myNote.getCreated());
-            System.out.println("Tags: " + myNote.getTags());
-            System.out.println("----------------");
-            System.out.println();
-            System.out.println("Content: " + myNote.getContent());
-            System.out.println();
-            System.out.println("Note created successfully");
+                switch (choice) {
+                    case 1:
+                        System.out.println("Enter note title: ");
+                        String title = scanner.nextLine();
+
+                        System.out.print("Enter note content: ");
+                        String content = scanner.nextLine();
+
+                        Note newNote = new Note(title, content);
+
+                        System.out.println("Note created: " + newNote.getTitle());
+                        break;
+                    case 2:
+                        //what happens
+                        break;
+                    case 3:
+                        //what happens
+                        break;
+                    case 4: 
+                        //what happens
+                        break;
+                    case 5:
+                        System.out.println("Goodbye!");
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please enter a correct choice.");
+                        break;
+                }
+
+            }
 
             } catch (IOException e) {
             System.out.println("Error creating notes directory: " + e.getMessage());

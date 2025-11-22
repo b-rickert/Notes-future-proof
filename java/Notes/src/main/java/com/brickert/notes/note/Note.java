@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Note {
     private String title;
     private String content;
@@ -19,7 +20,7 @@ public class Note {
         this.title = title;
         this.content = content;
         this.created = LocalDateTime.now();
-        this.modified = LocalDateTime.now();
+        this.modified = LocalDateTime.now(); //java.time
         this.tags = new ArrayList<>();  
     }
     // default constructor to allow user to create a note without providing title and content
