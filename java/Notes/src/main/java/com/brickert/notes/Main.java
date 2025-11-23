@@ -10,28 +10,37 @@ import java.util.List;
 
 public class Main {
 
+    public static String padRight(String text, int length) {
+    if (text.length() >= length) {
+        return text;
+    }
+    return text + " ".repeat(length - text.length());
+    }
+
     public static void showLoadingAnimation() throws InterruptedException {
     String[] frames = {
-        "[🧱      ] Loading",
-        "[🧱🧱    ] Loading.",
-        "[🧱🧱🧱  ] Loading..",
-        "[🧱🧱🧱🧱] Loading..."
+        "║ [🧱                    ] Loading...        ║",
+        "║ [🧱🧱                  ] Loading...        ║",
+        "║ [🧱🧱🧱                ] Loading...        ║",
+        "║ [🧱🧱🧱🧱              ] Loading...        ║",
+        "║ [🧱🧱🧱🧱🧱            ] Loading...        ║",
+        "║ [🧱🧱🧱🧱🧱🧱          ] Loading...        ║",
+        "║ [🧱🧱🧱🧱🧱🧱🧱        ] Loading...        ║",
+        "║ [🧱🧱🧱🧱🧱🧱🧱🧱      ] Loading...        ║",
+        "║ [🧱🧱🧱🧱🧱🧱🧱🧱🧱    ] Loading...        ║",
+        "║ [🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱  ] Loading...        ║",
+        "║ [🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱] Loading...        ║"
     };
     
+    System.out.println("╔════════════════════════════════════════════╗");
     for (int i = 0; i < 2; i++) {
         for (String frame : frames) {
             System.out.print("\r" + frame);
-            Thread.sleep(150);
+            Thread.sleep(100);
         }
     }
-    System.out.println("\r[🧱🧱🧱🧱] Ready!      ");
-    }    
-
-    public static String padRight(String text, int length) {
-        if (text.length() >= length) {
-            return text;
-        }
-        return text + " ".repeat(length - text.length());
+    System.out.println("\r║ [🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱] Ready!║");
+    System.out.println("╚════════════════════════════════════════════╝");
     }
 
     public static void main(String[] args) {
@@ -388,6 +397,14 @@ public class Main {
                         System.out.println("║" + padRight("  Unique tags:        " + uniqueTags, 44) + "║");
                         System.out.println("║" + padRight("  Most used tag:      " + mostUsedTag, 44) + "║");
                         System.out.println("╚════════════════════════════════════════════╝");
+                        break;
+                    case 7:
+                        java.awt.Toolkit.getDefaultToolkit().beep();
+                        System.out.println("Goodbye!");
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please enter a number 1-7.");
                         break;
                 }
             }
