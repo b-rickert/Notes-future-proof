@@ -88,6 +88,152 @@ public class NoteFileManager {
         }
         return matchingNotes;
     }
+
+    public static String openNanoForContent() throws IOException, InterruptedException {  
+        Path tempFile = Files.createTempFile("bricktionary-", ".md");   //create temp file
+
+        ProcessBuilder pb = new ProcessBuilder("nano", tempFile.toString());    //open nano with temp file
+        pb.inheritIO();      //connect nano to the terminal
+        Process process = pb.start();  
+        process.waitFor();      //wait until user closes nano
+        String content = Files.readString(tempFile);  //read the content from temp file
+        Files.delete(tempFile);     //deletes temp file
+        return content.trim();
+    }
+
+    public static String openNanoForEdit(String existingContent) throws IOException, InterruptedException {
+        Path tempFile = Files.createTempFile("bricktionary-edit-", ".md");
+        ProcessBuilder pb = new ProcessBuilder("nano", tempFile.toString());
+        pb.inheritIO();
+        Process process = pb.start();
+        process.waitFor();
+        String content = Files.readString(tempFile);
+        Files.delete(tempFile);
+        return content.trim();
+    }
+
+        // Get total word count
+    public static int getTotalWordCount() throws IOException {
+        List<String> allNotes = listAllNotes();
+        int totalWords = 0;
+        
+        for (String filename : allNotes) {
+            String content = loadNoteContent(filename);
+            String[] words = content.trim().split("\\s+");
+            totalWords += words.length;
+        }
+        
+        return totalWords;
+    }
+
+    // Get longest note (returns filename)
+    public static String getLongestNote() throws IOException {
+        List<String> allNotes = listAllNotes();
+        String longestNote = "";
+        int maxWords = 0;
+        
+        for (String filename : allNotes) {
+            String content = loadNoteContent(filename);
+            String[] words = content.trim().split("\\s+");
+            if (words.length > maxWords) {
+                maxWords = words.length;
+                longestNote = filename;
+            }
+        }
+        
+        return longestNote;
+    }
+
+    // Get all unique tags
+    public static List<String> getAllUniqueTags() throws IOException {
+        List<String> allNotes = listAllNotes();
+        List<String> allTags = new ArrayList<>();
+        
+        for (String filename : allNotes) {
+            String content = loadNoteContent(filename);
+            // Find tags line in YAML
+            for (String line : content.split("\n")) {
+                if (line.startsWith("tags:")) {
+                    String tagsStr = line.substring(5).trim();
+                    // Remove brackets [ ]
+                    tagsStr = tagsStr.replace("[", "").replace("]", "");
+                    if (!tagsStr.isEmpty()) {
+                        String[] tags = tagsStr.split(",");
+                        for (String tag : tags) {
+                            String cleanTag = tag.trim();
+                            if (!cleanTag.isEmpty() && !allTags.contains(cleanTag)) {
+                                allTags.add(cleanTag);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return allTags;
+    }
+
+    // Get most used tag
+    public static String getMostUsedTag() throws IOException {
+        List<String> allNotes = listAllNotes();
+        java.util.Map<String, Integer> tagCount = new java.util.HashMap<>();
+        
+        for (String filename : allNotes) {
+            String content = loadNoteContent(filename);
+            for (String line : content.split("\n")) {
+                if (line.startsWith("tags:")) {
+                    String tagsStr = line.substring(5).trim();
+                    tagsStr = tagsStr.replace("[", "").replace("]", "");
+                    if (!tagsStr.isEmpty()) {
+                        String[] tags = tagsStr.split(",");
+                        for (String tag : tags) {
+                            String cleanTag = tag.trim();
+                            if (!cleanTag.isEmpty()) {
+                                tagCount.put(cleanTag, tagCount.getOrDefault(cleanTag, 0) + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        String mostUsed = "None";
+        int maxCount = 0;
+        for (java.util.Map.Entry<String, Integer> entry : tagCount.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                mostUsed = entry.getKey();
+            }
+        }
+        
+        return mostUsed;
+    }
+
+    // Get title from filename (removes timestamp and .md)
+    public static String getTitleFromFilename(String filename) {
+        // Remove .md extension
+        String name = filename.replace(".md", "");
+        // Remove timestamp (last part after final dash with numbers)
+        int lastDash = name.lastIndexOf("-");
+        if (lastDash > 0) {
+            // Check if it's a timestamp section, remove it
+            String possibleTimestamp = name.substring(lastDash + 1);
+            if (possibleTimestamp.matches("\\d+")) {
+                name = name.substring(0, lastDash);
+                // Remove the date part too
+                lastDash = name.lastIndexOf("-");
+                if (lastDash > 0) {
+                    possibleTimestamp = name.substring(lastDash + 1);
+                    if (possibleTimestamp.matches("\\d+")) {
+                        name = name.substring(0, lastDash);
+                    }
+                }
+            }
+        }
+        // Replace dashes with spaces and capitalize
+        name = name.replace("-", " ");
+        return name;
+}
 } 
 
 

@@ -8,7 +8,7 @@ import java.io.IOException;
 public class Config {
     //default location for notes directory
     private static final Path DEFAULT_NOTES_DIRECTORY = 
-        Paths.get(System.getProperty("user.home"), ".notes"); //notes is stored HERE (relevant to each user with user.home)
+        Paths.get(System.getProperty("user.home"), ".bricktionary"); //notes is stored HERE (relevant to each user with user.home)
 
     // method to get the notes home directory
     // checks for environment variable NOTES_HOME, if it exists, use that as the notes directory

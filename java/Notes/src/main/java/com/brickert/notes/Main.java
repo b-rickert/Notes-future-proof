@@ -10,6 +10,23 @@ import java.util.List;
 
 public class Main {
 
+    public static void showLoadingAnimation() throws InterruptedException {
+    String[] frames = {
+        "[🧱      ] Loading",
+        "[🧱🧱    ] Loading.",
+        "[🧱🧱🧱  ] Loading..",
+        "[🧱🧱🧱🧱] Loading..."
+    };
+    
+    for (int i = 0; i < 2; i++) {
+        for (String frame : frames) {
+            System.out.print("\r" + frame);
+            Thread.sleep(150);
+        }
+    }
+    System.out.println("\r[🧱🧱🧱🧱] Ready!      ");
+    }    
+
     public static String padRight(String text, int length) {
         if (text.length() >= length) {
             return text;
@@ -23,22 +40,58 @@ public class Main {
         try {
             Path notesDir = Config.ensureNotesDirectoryExists();
             System.out.println("Notes directory created/verified at: " + notesDir);
-            java.awt.Toolkit.getDefaultToolkit().beep();
             System.out.println();
+            showLoadingAnimation();
+            java.awt.Toolkit.getDefaultToolkit().beep();
+            System.out.println("╔════════════════════════════════════════════╗");
+            System.out.println("║                                            ║");
+            System.out.println("║  ██████╗ ██████╗ ██╗ ██████╗██╗  ██╗       ║");
+            System.out.println("║  ██╔══██╗██╔══██╗██║██╔════╝██║ ██╔╝       ║");
+            System.out.println("║  ██████╔╝██████╔╝██║██║     █████╔╝        ║");
+            System.out.println("║  ██╔══██╗██╔══██╗██║██║     ██╔═██╗        ║");
+            System.out.println("║  ██████╔╝██║  ██║██║╚██████╗██║  ██╗       ║");
+            System.out.println("║  ╚═════╝ ╚═╝  ╚═╝╚═╝ ╚═════╝╚═╝  ╚═╝tionary║");
+            System.out.println("║                                            ║");
+            System.out.println("║    Brick's Personal Dictionary of Notes    ║");
+            System.out.println("║                                            ║");
+            System.out.println("╚════════════════════════════════════════════╝");
             while (true) {
-                System.out.println("\n╔══════════════════════════════════════╗");
-                System.out.println("║           BRICKtionary               ║");
-                System.out.println("║ Brick's Personal Dictionary of Notes ║");
-                System.out.println("╠══════════════════════════════════════╣");
-                System.out.println("║ 1. Create a new note                 ║");
-                System.out.println("║ 2. View all notes                    ║");
-                System.out.println("║ 3. Search notes                      ║");
-                System.out.println("║ 4. Delete a note                     ║");
-                System.out.println("║ 5. Exit                              ║");
-                System.out.println("╚══════════════════════════════════════╝");
+                int noteCount = NoteFileManager.listAllNotes().size();
+                System.out.println("\n╔════════════════════════════════════════════╗");
+                System.out.println("║              BRICKtionary                  ║");
+                System.out.println("║    Building knowledge brick by brick       ║");
+                System.out.println("║" + padRight("          You have " + noteCount + " note(s) ", 44) + "║");
+                System.out.println("╠════════════════════════════════════════════╣");
+                System.out.println("║  1. Create a new note                      ║");
+                System.out.println("║  2. View all notes                         ║");
+                System.out.println("║  3. Search notes                           ║");
+                System.out.println("║  4. Delete a note                          ║");
+                System.out.println("║  5. Edit a note                            ║");
+                System.out.println("║  6. View Stats                             ║");
+                System.out.println("║  7. Exit                                   ║");
+                System.out.println("╚════════════════════════════════════════════╝");
                 System.out.print("Enter your choice: ");
-                int choice = scanner.nextInt();
-                scanner.nextLine();
+                String input = scanner.nextLine();
+
+                // Check for easter egg
+                if (input.equalsIgnoreCase("brick")) {
+                    System.out.println("\n🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱");
+                    System.out.println("🧱   YOU FOUND THE SECRET!              🧱");
+                    System.out.println("🧱 You are a true BRICKtionary          🧱");
+                    System.out.println("🧱          Builder!                    🧱");
+                    System.out.println("🧱    \"Still worthy.\" - Thor            🧱");
+                    System.out.println("🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱");
+                    java.awt.Toolkit.getDefaultToolkit().beep();
+                    continue;
+                }
+
+                int choice;
+                try {
+                    choice = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid choice. Please enter a number.");
+                    continue;
+                }
 
                 switch (choice) {
                     case 1:
@@ -47,8 +100,10 @@ public class Main {
                         System.out.println("╚══════════════════════════════════════╝");
                         System.out.print("Enter note title: ");
                         String title = scanner.nextLine();
-                        System.out.print("Enter note content: ");
-                        String content = scanner.nextLine();
+
+                        System.out.println("Opening nano editor for content...");
+                        System.out.println("(Save with Ctrl+O, Exit with Ctrl+X)");
+                        String content = NoteFileManager.openNanoForContent();
                         System.out.print("Enter tags (comma seperated, or press Enter to skip): ");
                         String tagsInput = scanner.nextLine();
                         Note newNote = new Note(title, content);
@@ -251,18 +306,93 @@ public class Main {
                         }
                         break;
                     case 5:
-                        java.awt.Toolkit.getDefaultToolkit().beep();  // ← Goodbye beep
-                        System.out.println("Goodbye!");
-                        System.exit(0);
+                        List<String> notesToEdit = NoteFileManager.listAllNotes();
+                        if (notesToEdit.isEmpty()) {
+                            System.out.println("\n╔══════════════════════════════════════╗");
+                            System.out.println("║          No notes found              ║");
+                            System.out.println("╚══════════════════════════════════════╝");
+                        } else {
+                            int editMaxLength = 15;
+                            for (String note : notesToEdit) {
+                                if (note.length() > editMaxLength) {
+                                    editMaxLength = note.length();
+                                }
+                            }
+                            int editBoxWidth = editMaxLength + 6;
+                            String editBorder = "═".repeat(editBoxWidth);
+                            System.out.println("\n╔" + editBorder + "╗");
+                            System.out.println("║" + padRight("        EDIT NOTE", editBoxWidth) + "║");
+                            System.out.println("╠" + editBorder + "╣");
+
+                            for (int i = 0; i < notesToEdit.size(); i++) {
+                                String line = " " + (i + 1) + ". " + notesToEdit.get(i);
+                                System.out.println("║" + padRight(line, editBoxWidth) + "║");    
+                            }
+                            String cancelOption = " " + (notesToEdit.size() + 1) + ". Cancel";
+                            System.out.println("║" + padRight(cancelOption, editBoxWidth) + "║");
+                            System.out.println("╚" + editBorder + "╝");
+                            System.out.print("Select note to edit: ");
+                            int editChoice = scanner.nextInt();
+                            scanner.nextLine();
+
+                            if (editChoice > 0 && editChoice <= notesToEdit.size()) {
+                                String fileToEdit = notesToEdit.get(editChoice - 1);
+                                String oldContent = NoteFileManager.loadNoteContent(fileToEdit);
+                                System.out.println("\n╔══════════════════════════════════════╗");
+                                System.out.println("║         EDITING NOTE                 ║");
+                                System.out.println("╚══════════════════════════════════════╝");
+                                System.out.print("Enter new title (or press Enter to keep current): ");  //edit title 
+                                String newTitle = scanner.nextLine();
+                                System.out.println("Opening nano to edit content..."); 
+                                System.out.println("(Save with Ctrl+O, Exit with Ctrl+X)");
+                                String newContent = NoteFileManager.openNanoForEdit(oldContent);   //edit content in nano
+                                System.out.print("Enter new tags (comma seperated, or press Enter to keep current): ");
+                                String newTagsInput = scanner.nextLine(); //edit tags
+
+                                Note updatedNote;
+                                if (newTitle.trim().isEmpty()) {
+                                    String oldTitle = fileToEdit.substring(0, fileToEdit.lastIndexOf("-")).replace("-", " ");
+                                    updatedNote = new Note(oldTitle, newContent);
+                                } else {
+                                    updatedNote = new Note(newTitle, newContent);
+                                }
+                                if (!newTagsInput.trim().isEmpty()) {
+                                    String[] tagArray = newTagsInput.split(",");
+                                    for (String tag : tagArray) {
+                                        updatedNote.addTag(tag.trim());
+                                    }
+                                }
+                                NoteFileManager.deleteNote(fileToEdit);
+                                String newFilename = NoteFileManager.saveNote(updatedNote);
+                                java.awt.Toolkit.getDefaultToolkit().beep();
+                                System.out.println("✓ Note updated successfully!");
+                            }
+                        }
                         break;
-                    default:
-                        System.out.println("Invalid choice. Please enter a correct choice.");
+                    case 6:
+                        int totalNotes = NoteFileManager.listAllNotes().size();
+                        int totalWords = NoteFileManager.getTotalWordCount();
+                        int avgWords = (totalNotes > 0) ? totalWords / totalNotes : 0;
+                        String longestNoteFile = NoteFileManager.getLongestNote();
+                        String longestNote = NoteFileManager.getTitleFromFilename(longestNoteFile);
+                        int uniqueTags = NoteFileManager.getAllUniqueTags().size();
+                        String mostUsedTag = NoteFileManager.getMostUsedTag();
+                        
+                        System.out.println("\n╔════════════════════════════════════════════╗");
+                        System.out.println("║            📊 STATISTICS 📊                ║");
+                        System.out.println("╠════════════════════════════════════════════╣");
+                        System.out.println("║" + padRight("  Total notes:        " + totalNotes, 44) + "║");
+                        System.out.println("║" + padRight("  Total words:        " + totalWords, 44) + "║");
+                        System.out.println("║" + padRight("  Average words/note: " + avgWords, 44) + "║");
+                        System.out.println("║" + padRight("  Longest note:       " + longestNote, 44) + "║");
+                        System.out.println("║" + padRight("  Unique tags:        " + uniqueTags, 44) + "║");
+                        System.out.println("║" + padRight("  Most used tag:      " + mostUsedTag, 44) + "║");
+                        System.out.println("╚════════════════════════════════════════════╝");
                         break;
                 }
-
             }
 
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
             System.out.println("Error creating notes directory: " + e.getMessage());
         }
     }
