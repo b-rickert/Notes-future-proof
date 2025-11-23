@@ -94,6 +94,7 @@ public class Main {
                     continue;
                 }
 
+                //parses user input as an interger 
                 int choice;
                 try {
                     choice = Integer.parseInt(input);
@@ -122,6 +123,7 @@ public class Main {
                                 newNote.addTag(tag.trim()); 
                             }
                         }
+                        //save note and audible success noise
                         String filename = NoteFileManager.saveNote(newNote);
                         java.awt.Toolkit.getDefaultToolkit().beep();
                         
@@ -187,6 +189,7 @@ public class Main {
                                 }
                                 int contentBoxWidth = contentMaxLength + 2;
                                 
+                                //Display notes content inside the box
                                 String contentTopBottom = "═".repeat(contentBoxWidth);
                                 
                                 System.out.println("\n╔" + contentTopBottom + "╗");

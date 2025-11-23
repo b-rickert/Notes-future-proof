@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
+//manages all my note files, performing CRUD operations and some extra that I added
 public class NoteFileManager {
     public static String generateFilename(String title) {
         String filename = title.toLowerCase();
@@ -23,11 +24,13 @@ public class NoteFileManager {
         return filename;
     }
     
+    //Formates note to YAML for Title, created, modified, and tags
     public static String formatNoteAsYaml(Note note) {
         String output = "";
         output = output + "---\n";
         output = output + "title: " + note.getTitle() + "\n";
 
+        //converts timestamps to UTC 
         String createdUtc = note.getCreated().atZone(ZoneId.systemDefault()).toInstant().toString();
         output = output + "created: " + createdUtc + "\n";
 
@@ -40,6 +43,7 @@ public class NoteFileManager {
         return output;
     }
 
+    //saves Note to directory as a markdown file and returns the filename
     public static String saveNote(Note note) throws IOException {
         String filename = generateFilename(note.getTitle());
         Path notesDir = Config.getNotesHome();
@@ -49,6 +53,7 @@ public class NoteFileManager {
         return filename;
     }
 
+    //list all markdown files in note directory, more specifically the ones ending with "".md" (Markdown file)
     public static List<String> listAllNotes() throws IOException {
         Path notesDir = Config.getNotesHome();
         List <String> filenames = new ArrayList<>();
@@ -62,6 +67,7 @@ public class NoteFileManager {
         return filenames;
     }
 
+    //loads complete content of note file as a string
     public static String loadNoteContent(String filename) throws IOException {
         Path notesDir = Config.getNotesHome();
         Path filePath = notesDir.resolve(filename);
@@ -69,12 +75,14 @@ public class NoteFileManager {
         return content;
     }
 
+    //deletes a note file from directory
     public static void deleteNote(String filename) throws IOException {
         Path notesDir = Config.getNotesHome();
         Path filePath = notesDir.resolve(filename);
         Files.delete(filePath);
     }
 
+    //searches all notes for a keyword, checks file name and content(tags), and returns a list of matching items
     public static List<String> searchNotes(String keyword) throws IOException {
         List<String> allNotes = listAllNotes();
         List<String> matchingNotes = new ArrayList<>();
@@ -89,9 +97,11 @@ public class NoteFileManager {
         return matchingNotes;
     }
 
+    //opens nano text editor for creating new notes, uses temp file that is deleted after editing, returns content entered to user
     public static String openNanoForContent() throws IOException, InterruptedException {  
         Path tempFile = Files.createTempFile("bricktionary-", ".md");   //create temp file
 
+        //launches nano editor with temp file
         ProcessBuilder pb = new ProcessBuilder("nano", tempFile.toString());    //open nano with temp file
         pb.inheritIO();      //connect nano to the terminal
         Process process = pb.start();  
@@ -101,6 +111,7 @@ public class NoteFileManager {
         return content.trim();
     }
 
+    //opens nano editor to edit a note, similar to openNanoForContent but pre-populates the editor
     public static String openNanoForEdit(String existingContent) throws IOException, InterruptedException {
         Path tempFile = Files.createTempFile("bricktionary-edit-", ".md");
         ProcessBuilder pb = new ProcessBuilder("nano", tempFile.toString());
@@ -112,14 +123,14 @@ public class NoteFileManager {
         return content.trim();
     }
 
-        // Get total word count
+        // Get total word count across all my notes, and splits content by whitespace to count words.
     public static int getTotalWordCount() throws IOException {
         List<String> allNotes = listAllNotes();
         int totalWords = 0;
         
         for (String filename : allNotes) {
             String content = loadNoteContent(filename);
-            String[] words = content.trim().split("\\s+");
+            String[] words = content.trim().split("\\s+"); //splits whitespace 
             totalWords += words.length;
         }
         
@@ -144,7 +155,7 @@ public class NoteFileManager {
         return longestNote;
     }
 
-    // Get all unique tags
+    // looks at all unique tags between all my notes, parses YAML formatter tags field, and returns tags without repeating them
     public static List<String> getAllUniqueTags() throws IOException {
         List<String> allNotes = listAllNotes();
         List<String> allTags = new ArrayList<>();
@@ -173,12 +184,12 @@ public class NoteFileManager {
         return allTags;
     }
 
-    // Get most used tag
+    // searches notes for most frequently used tags and returns tag name or None if null
     public static String getMostUsedTag() throws IOException {
         List<String> allNotes = listAllNotes();
         java.util.Map<String, Integer> tagCount = new java.util.HashMap<>();
         
-        for (String filename : allNotes) {
+        for (String filename : allNotes) { //count occurences of each individual tag
             String content = loadNoteContent(filename);
             for (String line : content.split("\n")) {
                 if (line.startsWith("tags:")) {
@@ -196,7 +207,7 @@ public class NoteFileManager {
                 }
             }
         }
-        
+        //finds the tag with the highest count of usage
         String mostUsed = "None";
         int maxCount = 0;
         for (java.util.Map.Entry<String, Integer> entry : tagCount.entrySet()) {
